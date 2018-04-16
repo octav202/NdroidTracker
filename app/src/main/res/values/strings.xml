@@ -7,4 +7,9 @@
     <string name="storage_encryption">Storage Encryption</string>
     <string name="wipe_data">Wipe Data</string>
     <string name="reboot">Reboot on Start Up</string>
+
+    <string name="type_satellite">Satellite</string>
+    <string name="type_normal">Normal</string>
+    <string name="type_hybrid">Hybrid</string>
+    <string name="type_terrain">Terrain</string>
 </resources>

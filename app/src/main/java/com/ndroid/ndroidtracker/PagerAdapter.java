@@ -20,7 +20,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new RemoteControlFragment();
             case 1:
-                return new Fragment();
+                return new LocationFragment();
             default:
                 return null;
         }
