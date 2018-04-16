@@ -15,7 +15,7 @@ public class SignInTask extends AsyncTask<String, Void, Integer> {
         String pass = strings[1];
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

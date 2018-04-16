@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <Switch android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/locked_switch"
+        android:layout_margin="20dp"
+        android:text="@string/locked"
+        android:textSize="15sp"/>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimaryDark"/>
+
+    <Switch android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/storage_encryption_switch"
+        android:layout_margin="20dp"
+        android:text="@string/storage_encryption"
+        android:textSize="15sp"/>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimaryDark"/>
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reboot"
+        android:text="@string/reboot"
+        android:layout_margin="20dp"
+        android:textSize="15sp"/>
+
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimaryDark"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/wipe_data"
+        android:text="@string/wipe_data"
+        android:layout_margin="20dp"/>
+
+
+</LinearLayout>

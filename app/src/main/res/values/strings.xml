@@ -3,4 +3,8 @@
     <string name="hint_device_name">Device Name</string>
     <string name="hint_device_pass">Password</string>
     <string name="sign_in">Sign In</string>
+    <string name="locked">Locked</string>
+    <string name="storage_encryption">Storage Encryption</string>
+    <string name="wipe_data">Wipe Data</string>
+    <string name="reboot">Reboot on Start Up</string>
 </resources>
