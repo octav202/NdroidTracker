@@ -53,7 +53,7 @@ public class RemoteControlFragment extends Fragment {
         mWipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity().getApplicationContext(), "Wiped : ", Toast.LENGTH_SHORT).show();
+
             }
         });
         return view;

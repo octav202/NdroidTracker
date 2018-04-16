@@ -53,8 +53,13 @@ public class SignInActivity extends AppCompatActivity {
                         mProgressBar.setVisibility(View.GONE);
                         mSignInLayout.setAlpha(1f);
 
-                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(i);
+                        if (id != 0) {
+                            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(i);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Invalid Credentials",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }).execute(name, pass);
             }

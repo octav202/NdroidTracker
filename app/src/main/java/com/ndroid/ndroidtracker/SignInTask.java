@@ -1,11 +1,23 @@
 package com.ndroid.ndroidtracker;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import static com.ndroid.ndroidtracker.Constants.TAG;
+
 
 public class SignInTask extends AsyncTask<String, Void, Integer> {
 
     private SignInCallback mCallback;
-    public SignInTask(SignInCallback callback){
+
+    public SignInTask(SignInCallback callback) {
         mCallback = callback;
     }
 
@@ -21,7 +33,7 @@ public class SignInTask extends AsyncTask<String, Void, Integer> {
         }
 
         // Authenticate
-        return 0;
+        return Service.getDeviceId(name, pass);
     }
 
     @Override
@@ -34,10 +46,12 @@ public class SignInTask extends AsyncTask<String, Void, Integer> {
         mCallback.onFinished(result);
     }
 
-    public interface SignInCallback{
+    public interface SignInCallback {
         void onStarted();
+
         void onFinished(int id);
     }
+
 
 }
 

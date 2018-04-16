@@ -6,9 +6,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import static com.ndroid.ndroidtracker.Constants.TAG;
+
 public class LocationFragment extends SupportMapFragment implements OnMapReadyCallback{
 
-    private final static String TAG = "NT_";
+
     private GoogleMap mMap;
 
     @Override
