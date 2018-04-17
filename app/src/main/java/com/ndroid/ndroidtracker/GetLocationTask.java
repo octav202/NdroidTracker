@@ -3,7 +3,9 @@ package com.ndroid.ndroidtracker;
 
 import android.os.AsyncTask;
 
-public class GetLocationTask extends AsyncTask<Integer, Void, String> {
+import java.util.List;
+
+public class GetLocationTask extends AsyncTask<Integer, Void, List<Location>> {
 
     private GetLocationCallback mCallback;
 
@@ -12,7 +14,7 @@ public class GetLocationTask extends AsyncTask<Integer, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Integer... deviceId) {
+    protected List<Location> doInBackground(Integer... deviceId) {
 
         try {
             Thread.sleep(1000);
@@ -30,14 +32,14 @@ public class GetLocationTask extends AsyncTask<Integer, Void, String> {
     }
 
     @Override
-    protected void onPostExecute(String result) {
+    protected void onPostExecute(List<Location> result) {
         mCallback.onFinished(result);
     }
 
     public interface GetLocationCallback {
         void onStarted();
 
-        void onFinished(String result);
+        void onFinished(List<Location> result);
     }
 
 

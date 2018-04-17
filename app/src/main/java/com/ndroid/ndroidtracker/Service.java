@@ -2,6 +2,10 @@ package com.ndroid.ndroidtracker;
 
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +15,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.ndroid.ndroidtracker.Constants.GET_DEVICE_ID;
 import static com.ndroid.ndroidtracker.Constants.GET_LOCATION;
@@ -25,11 +31,14 @@ public class Service {
         return currentId;
     }
 
+    public static int setCurrentDeviceId(int id) {
+        currentId = id;
+    }
+
     /**
      * Converts the contents of an InputStream to a String.
      */
-    public static String readStream(InputStream stream, int maxReadSize)
-            throws IOException, UnsupportedEncodingException {
+    public static String readStream(InputStream stream, int maxReadSize) throws IOException, UnsupportedEncodingException {
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
         char[] rawBuffer = new char[maxReadSize];
@@ -97,8 +106,7 @@ public class Service {
             }
             stream = connection.getInputStream();
             if (stream != null) {
-                try (BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(stream, "UTF8"))) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF8"))) {
                     result = Integer.parseInt(reader.readLine());
                 }
                 Log.d(TAG, "Result : " + result);
@@ -121,6 +129,7 @@ public class Service {
 
         currentId = result;
         Log.d(TAG, "Result : " + result);
+
         return result;
     }
 
@@ -152,9 +161,9 @@ public class Service {
      * Get location for a device
      *
      * @param deviceId
-     * @return the id of the user.
+     * @return list of locations of the current device.
      */
-    public static String getLocation(int deviceId) {
+    public static List<Location> getLocation(int deviceId) {
         URL url = getLocationUrl(deviceId);
         Log.d(TAG, "getLocationUrl() :" + url);
 
@@ -176,7 +185,6 @@ public class Service {
             stream = connection.getInputStream();
             if (stream != null) {
                 result = readStream(stream, 500);
-                Log.d(TAG, "Result : " + result);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -194,6 +202,28 @@ public class Service {
             }
         }
 
-        return result;
+        //Extract location list from Json
+        List<Location> locations = new ArrayList<Location>();
+        if (result != null && !result.isEmpty()) {
+            Log.d(TAG, "String Result : " + result);
+            try {
+                JSONArray array = new JSONArray(result);
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject jsonObj = array.getJSONObject(i);
+                    Location location = new Location();
+                    location.setDeviceId(currentId);
+                    location.setLat(jsonObj.getDouble("lat"));
+                    location.setLon(jsonObj.getDouble("lon"));
+                    location.setTimeStamp(jsonObj.getString("timeStamp"));
+                    locations.add(location);
+                    Log.d(TAG,location.toString());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.e(TAG, "Invalid Result");
+        }
+        return locations;
     }
 }
