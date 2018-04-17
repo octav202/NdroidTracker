@@ -18,6 +18,18 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
         super.onStart();
         Log.d(TAG, "onStart()");
         getMapAsync(this);
+
+        new GetLocationTask(new GetLocationTask.GetLocationCallback() {
+            @Override
+            public void onStarted() {
+
+            }
+
+            @Override
+            public void onFinished(String result) {
+
+            }
+        }).execute(Service.getCurrentDeviceId());
     }
 
     @Override
