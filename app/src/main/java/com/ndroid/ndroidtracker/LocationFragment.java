@@ -18,7 +18,6 @@ import static com.ndroid.ndroidtracker.Constants.TAG;
 
 public class LocationFragment extends SupportMapFragment implements OnMapReadyCallback {
 
-
     private GoogleMap mMap;
     private List<Location> mLocations = new ArrayList<>();
 
@@ -27,42 +26,6 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
         super.onStart();
         Log.d(TAG, "onStart()");
         getMapAsync(this);
-
-        new GetLocationTask(new GetLocationTask.GetLocationCallback() {
-            @Override
-            public void onStarted() {
-
-            }
-
-            @Override
-            public void onFinished(List<Location> result) {
-                mLocations.addAll(result);
-                setMarkersForLocations(mLocations);
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Location location = new Location();
-                        location.setDeviceId(Service.getCurrentDeviceId());
-                        location.setLat(70);
-                        location.setLon(70);
-                        location.setTimeStamp("10:07");
-
-                        new SendLocationTask(new SendLocationTask.SendLocationCallback() {
-                            @Override
-                            public void onStarted() {
-
-                            }
-
-                            @Override
-                            public void onFinished(Boolean result) {
-
-                            }
-                        }).execute(location);
-                    }
-                },3000);
-            }
-        }).execute(Service.getCurrentDeviceId());
     }
 
     @Override
@@ -76,6 +39,17 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady()");
         mMap = googleMap;
+        new GetLocationTask(new GetLocationTask.GetLocationCallback() {
+            @Override
+            public void onStarted() {
+            }
+
+            @Override
+            public void onFinished(List<Location> result) {
+                mLocations.addAll(result);
+                setMarkersForLocations(mLocations);
+            }
+        }).execute(Service.getCurrentDeviceId());
     }
 
     public void setMapType(int type) {

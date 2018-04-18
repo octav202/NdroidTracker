@@ -41,6 +41,7 @@ public class SignInActivity extends AppCompatActivity {
                     return;
                 }
 
+                // Sign User In
                 new SignInTask(new SignInTask.SignInCallback() {
                     @Override
                     public void onStarted() {
@@ -54,8 +55,22 @@ public class SignInActivity extends AppCompatActivity {
                         mSignInLayout.setAlpha(1f);
 
                         if (id != 0) {
-                            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(i);
+                            // Get Device Status
+                            new GetDeviceStatusTask(new GetDeviceStatusTask.GetDeviceStatusCallback() {
+                                @Override
+                                public void onStarted() {
+                                }
+
+                                @Override
+                                public void onFinished(DeviceStatus status) {
+                                    Service.setCurrentDeviceStatus(status);
+                                    // Go to Main Activity
+                                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(i);
+
+                                }
+                            }).execute(id);
+
                         } else {
                             Toast.makeText(getApplicationContext(), "Invalid Credentials",
                                     Toast.LENGTH_SHORT).show();

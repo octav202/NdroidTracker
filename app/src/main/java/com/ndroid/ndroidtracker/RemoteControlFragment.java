@@ -15,7 +15,7 @@ public class RemoteControlFragment extends Fragment {
     private Switch mLockSwitch;
     private Switch mEncryptionSwitch;
     private Switch mRebootSwitch;
-    private Button mWipeButton;
+    private Switch mWipeSwitch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -24,38 +24,73 @@ public class RemoteControlFragment extends Fragment {
         mLockSwitch = (Switch) view.findViewById(R.id.locked_switch);
         mEncryptionSwitch = (Switch) view.findViewById(R.id.storage_encryption_switch);
         mRebootSwitch = (Switch) view.findViewById(R.id.reboot);
-        mWipeButton = (Button) view.findViewById(R.id.wipe_data);
+        mWipeSwitch = (Switch) view.findViewById(R.id.wipe_data);
+
+        final DeviceStatus deviceStatus = Service.getCurrentDeviceStatus();
+
+        if (deviceStatus != null) {
+            mLockSwitch.setChecked(deviceStatus.getLock() == 1 ? true : false);
+            mEncryptionSwitch.setChecked(deviceStatus.getEncryptStorage() == 1 ? true : false);
+            mRebootSwitch.setChecked(deviceStatus.getReboot() == 1 ? true : false);
+            mWipeSwitch.setChecked(deviceStatus.getWipeData() == 1 ? true : false);
+        }
 
         mLockSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(getActivity().getApplicationContext(), "Locked : " + isChecked,
-                        Toast.LENGTH_SHORT).show();
+                if (deviceStatus != null) {
+                    deviceStatus.setLock(isChecked ? 1 : 0);
+                    updateDeviceStatus();
+                }
             }
         });
 
         mEncryptionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(getActivity().getApplicationContext(), "Storage Ecnrypted : " + isChecked,
-                        Toast.LENGTH_SHORT).show();
+                if (deviceStatus != null) {
+                    deviceStatus.setEncryptStorage(isChecked ? 1 : 0);
+                    updateDeviceStatus();
+                }
             }
         });
 
         mRebootSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(getActivity().getApplicationContext(), "Reboot on Start-Up : " + isChecked,
-                        Toast.LENGTH_SHORT).show();
+                if (deviceStatus != null) {
+                    deviceStatus.setReboot(isChecked ? 1 : 0);
+                    updateDeviceStatus();
+                }
             }
         });
 
-        mWipeButton.setOnClickListener(new View.OnClickListener() {
+        mWipeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (deviceStatus != null) {
+                    deviceStatus.setWipeData(isChecked ? 1 : 0);
+                    updateDeviceStatus();
+                }
             }
         });
         return view;
+    }
+
+    private void updateDeviceStatus() {
+        new SendDeviceStatusTask(new SendDeviceStatusTask.SendDeviceStatusCallback() {
+            @Override
+            public void onStarted() {
+
+            }
+
+            @Override
+            public void onFinished(Boolean result) {
+                if (!result) {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).execute(Service.getCurrentDeviceStatus());
     }
 }

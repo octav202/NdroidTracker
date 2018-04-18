@@ -1,5 +1,6 @@
 package com.ndroid.ndroidtracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -30,7 +31,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         Service.setCurrentDeviceId(0);
+        Service.setCurrentDeviceStatus(null);
     }
 
     @Override
@@ -42,27 +49,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int type;
         switch (item.getItemId()) {
-            case R.id.type_normal:
-                type = GoogleMap.MAP_TYPE_NORMAL;
-                break;
-            case R.id.type_satellite:
-                type = GoogleMap.MAP_TYPE_SATELLITE;
-                break;
-            case R.id.type_hybrid:
-                type = GoogleMap.MAP_TYPE_HYBRID;
-                break;
-            case R.id.terrain:
-                type = GoogleMap.MAP_TYPE_TERRAIN;
+            case R.id.sign_out:
+                Service.setCurrentDeviceStatus(null);
+                Service.setCurrentDeviceId(0);
+                Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 break;
             default:
-                type = GoogleMap.MAP_TYPE_NORMAL;
                 break;
-        }
-        LocationFragment fragment = (LocationFragment) mPagerAdapter.getItem(1);
-        if (fragment != null) {
-            fragment.setMapType(type);
         }
         return true;
     }

@@ -40,11 +40,12 @@
         android:layout_height="1dp"
         android:background="@color/colorPrimaryDark"/>
 
-    <Button
+    <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/wipe_data"
         android:text="@string/wipe_data"
+        android:textSize="15sp"
         android:layout_margin="20dp"/>
 
 

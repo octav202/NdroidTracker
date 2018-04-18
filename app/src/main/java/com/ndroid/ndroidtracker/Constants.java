@@ -9,4 +9,6 @@ public class Constants {
     public static final String GET_DEVICE_ID = "getDeviceId";
     public static final String SEND_LOCATION = "sendLocation";
     public static final String GET_LOCATION = "getLocation";
+    public static final String GET_DEVICE_STATUS = "getDeviceStatus";
+    public static final String SEND_DEVICE_STATUS = "sendDeviceStatus";
 }
