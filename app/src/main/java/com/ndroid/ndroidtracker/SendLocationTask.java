@@ -5,16 +5,16 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
-public class GetLocationTask extends AsyncTask<Integer, Void, List<Location>> {
+public class SendLocationTask extends AsyncTask<Location, Void, Boolean> {
 
-    private GetLocationCallback mCallback;
+    private SendLocationCallback mCallback;
 
-    public GetLocationTask(GetLocationCallback callback) {
+    public SendLocationTask(SendLocationCallback callback) {
         mCallback = callback;
     }
 
     @Override
-    protected List<Location> doInBackground(Integer... deviceId) {
+    protected Boolean doInBackground(Location... location) {
 
         try {
             Thread.sleep(1000);
@@ -22,7 +22,8 @@ public class GetLocationTask extends AsyncTask<Integer, Void, List<Location>> {
             e.printStackTrace();
         }
 
-        return Service.getLocation(deviceId[0]);
+        // Authenticate
+        return Service.sendLocation(location[0]);
     }
 
     @Override
@@ -31,14 +32,14 @@ public class GetLocationTask extends AsyncTask<Integer, Void, List<Location>> {
     }
 
     @Override
-    protected void onPostExecute(List<Location> result) {
+    protected void onPostExecute(Boolean result) {
         mCallback.onFinished(result);
     }
 
-    public interface GetLocationCallback {
+    public interface SendLocationCallback {
         void onStarted();
 
-        void onFinished(List<Location> result);
+        void onFinished(Boolean result);
     }
 
 

@@ -25,13 +25,6 @@ public class SignInTask extends AsyncTask<String, Void, Integer> {
     protected Integer doInBackground(String... strings) {
         String name = strings[0];
         String pass = strings[1];
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         // Authenticate
         return Service.getDeviceId(name, pass);
     }

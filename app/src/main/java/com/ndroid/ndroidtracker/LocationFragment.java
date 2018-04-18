@@ -1,5 +1,6 @@
 package com.ndroid.ndroidtracker;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -7,11 +8,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import static com.ndroid.ndroidtracker.Constants.TAG;
 
@@ -37,6 +38,29 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
             public void onFinished(List<Location> result) {
                 mLocations.addAll(result);
                 setMarkersForLocations(mLocations);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Location location = new Location();
+                        location.setDeviceId(Service.getCurrentDeviceId());
+                        location.setLat(70);
+                        location.setLon(70);
+                        location.setTimeStamp("10:07");
+
+                        new SendLocationTask(new SendLocationTask.SendLocationCallback() {
+                            @Override
+                            public void onStarted() {
+
+                            }
+
+                            @Override
+                            public void onFinished(Boolean result) {
+
+                            }
+                        }).execute(location);
+                    }
+                },3000);
             }
         }).execute(Service.getCurrentDeviceId());
     }

@@ -7,19 +7,28 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.ndroid.ndroidtracker.Constants.GET_DEVICE_ID;
 import static com.ndroid.ndroidtracker.Constants.GET_LOCATION;
+import static com.ndroid.ndroidtracker.Constants.SEND_LOCATION;
 import static com.ndroid.ndroidtracker.Constants.SERVER_URL;
 import static com.ndroid.ndroidtracker.Constants.TAG;
 
@@ -31,14 +40,14 @@ public class Service {
         return currentId;
     }
 
-    public static int setCurrentDeviceId(int id) {
+    public static void setCurrentDeviceId(int id) {
         currentId = id;
     }
 
     /**
      * Converts the contents of an InputStream to a String.
      */
-    public static String readStream(InputStream stream, int maxReadSize) throws IOException, UnsupportedEncodingException {
+    public static String readStream(InputStream stream, int maxReadSize) throws IOException {
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
         char[] rawBuffer = new char[maxReadSize];
@@ -225,5 +234,73 @@ public class Service {
             Log.e(TAG, "Invalid Result");
         }
         return locations;
+    }
+
+    /**
+     * Send device's current location.
+     *
+     * @return success/fail.
+     */
+    public static boolean sendLocation(Location location) {
+        URL url = null;
+        try {
+            url = new URL(SERVER_URL + SEND_LOCATION);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "sendLocationUrl() :" + url);
+
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
+            Log.e(TAG, "Open Connection error " + e);
+            return false;
+        }
+        connection.setDoOutput (true);
+        connection.setUseCaches (false);
+        connection.setChunkedStreamingMode(0);
+        connection.setRequestProperty("Content-Type","application/json");
+
+        // Create Json Object
+        JSONObject json = new JSONObject();
+        try {
+            json.put("deviceId", location.getDeviceId());
+            json.put("lat", location.getLat());
+            json.put("lon", location.getLon());
+            json.put("timeStamp", location.getTimeStamp());
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating Json object" + e);
+        }
+
+        // Send request body
+        OutputStream os = null;
+        try {
+            os = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            writer.write(json.toString());
+            writer.flush();
+            writer.close();
+            os.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Error writing request body" + e);
+            return false;
+        }
+
+        // Connect
+        try {
+            connection.connect();
+            int response = connection.getResponseCode();
+            if (response != HttpURLConnection.HTTP_OK) {
+                Log.e(TAG, "Connection Failed :" + response);
+                return false;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Connect error " + e);
+            return false;
+        }
+
+        Log.d(TAG, "Location sent : " + location);
+        return true;
     }
 }
