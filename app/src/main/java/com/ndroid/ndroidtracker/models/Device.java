@@ -1,4 +1,4 @@
-package com.ndroid.ndroidtracker;
+package com.ndroid.ndroidtracker.models;
 
 public class Device {
 

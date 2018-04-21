@@ -1,14 +1,21 @@
-package com.ndroid.ndroidtracker;
+package com.ndroid.ndroidtracker.ui;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.ndroid.ndroidtracker.R;
+import com.ndroid.ndroidtracker.server.SendDeviceStatusTask;
+import com.ndroid.ndroidtracker.server.ServerApi;
+import com.ndroid.ndroidtracker.models.DeviceStatus;
 
 public class RemoteControlFragment extends Fragment {
 
@@ -16,6 +23,10 @@ public class RemoteControlFragment extends Fragment {
     private Switch mEncryptionSwitch;
     private Switch mRebootSwitch;
     private Switch mWipeSwitch;
+    private Switch mTrackLocationSwitch;
+    private LinearLayout mFrequencyLayout;
+    private TextView mFrequencyText;
+    private SeekBar mFrequencyBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,14 +36,21 @@ public class RemoteControlFragment extends Fragment {
         mEncryptionSwitch = (Switch) view.findViewById(R.id.storage_encryption_switch);
         mRebootSwitch = (Switch) view.findViewById(R.id.reboot);
         mWipeSwitch = (Switch) view.findViewById(R.id.wipe_data);
+        mTrackLocationSwitch = (Switch) view.findViewById(R.id.track);
+        mFrequencyLayout = (LinearLayout) view.findViewById(R.id.frequencyLayout);
+        mFrequencyText = (TextView) view.findViewById(R.id.frequencyText);
+        mFrequencyBar = (SeekBar) view.findViewById(R.id.frequencyBar);
 
-        final DeviceStatus deviceStatus = Service.getCurrentDeviceStatus();
+        final DeviceStatus deviceStatus = ServerApi.getCurrentDeviceStatus();
 
         if (deviceStatus != null) {
             mLockSwitch.setChecked(deviceStatus.getLock() == 1 ? true : false);
             mEncryptionSwitch.setChecked(deviceStatus.getEncryptStorage() == 1 ? true : false);
             mRebootSwitch.setChecked(deviceStatus.getReboot() == 1 ? true : false);
             mWipeSwitch.setChecked(deviceStatus.getWipeData() == 1 ? true : false);
+            mTrackLocationSwitch.setChecked(deviceStatus.getLocationFrequency() == 0 ? false : true);
+            mFrequencyBar.setProgress(deviceStatus.getLocationFrequency());
+            mFrequencyText.setText("Frequency: " + deviceStatus.getLocationFrequency() + " sec.");
         }
 
         mLockSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -74,6 +92,42 @@ public class RemoteControlFragment extends Fragment {
                 }
             }
         });
+
+        mTrackLocationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mFrequencyLayout.setEnabled(isChecked);
+                mFrequencyLayout.setClickable(isChecked);
+                mFrequencyBar.setEnabled(isChecked);
+
+                if (deviceStatus != null) {
+                    deviceStatus.setLocationFrequency(isChecked ? mFrequencyBar.getProgress() : 0);
+                    updateDeviceStatus();
+                }
+            }
+        });
+
+        mFrequencyBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mFrequencyText.setText("Frequency : " + progress + " sec.");
+                if (deviceStatus != null) {
+                    deviceStatus.setLocationFrequency(mFrequencyBar.getProgress());
+                    updateDeviceStatus();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         return view;
     }
 
@@ -91,6 +145,6 @@ public class RemoteControlFragment extends Fragment {
                             "Failed", Toast.LENGTH_SHORT).show();
                 }
             }
-        }).execute(Service.getCurrentDeviceStatus());
+        }).execute(ServerApi.getCurrentDeviceStatus());
     }
 }

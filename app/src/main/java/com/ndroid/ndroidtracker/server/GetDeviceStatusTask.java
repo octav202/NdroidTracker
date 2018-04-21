@@ -1,9 +1,9 @@
-package com.ndroid.ndroidtracker;
+package com.ndroid.ndroidtracker.server;
 
 
 import android.os.AsyncTask;
 
-import java.util.List;
+import com.ndroid.ndroidtracker.models.DeviceStatus;
 
 public class GetDeviceStatusTask extends AsyncTask<Integer, Void, DeviceStatus> {
 
@@ -22,7 +22,7 @@ public class GetDeviceStatusTask extends AsyncTask<Integer, Void, DeviceStatus> 
             e.printStackTrace();
         }
 
-        return Service.getDeviceStatus(deviceId[0]);
+        return ServerApi.getDeviceStatus(deviceId[0]);
     }
 
     @Override

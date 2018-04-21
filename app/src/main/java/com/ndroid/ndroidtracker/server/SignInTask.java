@@ -1,16 +1,6 @@
-package com.ndroid.ndroidtracker;
+package com.ndroid.ndroidtracker.server;
 
 import android.os.AsyncTask;
-import android.util.Log;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import static com.ndroid.ndroidtracker.Constants.TAG;
 
 
 public class SignInTask extends AsyncTask<String, Void, Integer> {
@@ -26,7 +16,7 @@ public class SignInTask extends AsyncTask<String, Void, Integer> {
         String name = strings[0];
         String pass = strings[1];
         // Authenticate
-        return Service.getDeviceId(name, pass);
+        return ServerApi.getDeviceId(name, pass);
     }
 
     @Override

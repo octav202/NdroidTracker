@@ -1,7 +1,9 @@
-package com.ndroid.ndroidtracker;
+package com.ndroid.ndroidtracker.server;
 
 
 import android.os.AsyncTask;
+
+import com.ndroid.ndroidtracker.models.DeviceStatus;
 
 public class SendDeviceStatusTask extends AsyncTask<DeviceStatus, Void, Boolean> {
 
@@ -21,7 +23,7 @@ public class SendDeviceStatusTask extends AsyncTask<DeviceStatus, Void, Boolean>
         }
 
         // Authenticate
-        return Service.sendDeviceStatus(status[0]);
+        return ServerApi.sendDeviceStatus(status[0]);
     }
 
     @Override

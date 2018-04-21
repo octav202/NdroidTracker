@@ -1,4 +1,4 @@
-package com.ndroid.ndroidtracker;
+package com.ndroid.ndroidtracker.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.ndroid.ndroidtracker.server.GetDeviceStatusTask;
+import com.ndroid.ndroidtracker.R;
+import com.ndroid.ndroidtracker.server.ServerApi;
+import com.ndroid.ndroidtracker.server.SignInTask;
+import com.ndroid.ndroidtracker.models.DeviceStatus;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -63,7 +69,7 @@ public class SignInActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFinished(DeviceStatus status) {
-                                    Service.setCurrentDeviceStatus(status);
+                                    ServerApi.setCurrentDeviceStatus(status);
                                     // Go to Main Activity
                                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                                     startActivity(i);

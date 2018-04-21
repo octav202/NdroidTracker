@@ -1,4 +1,4 @@
-package com.ndroid.ndroidtracker;
+package com.ndroid.ndroidtracker.ui;
 
 
 import android.support.v4.app.Fragment;

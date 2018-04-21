@@ -8,4 +8,6 @@
     <string name="wipe_data">Wipe Data</string>
     <string name="reboot">Reboot on Start Up</string>
     <string name="sign_out">Sign Out</string>
+    <string name="track_location">Track Location</string>
+    <string name="frequency">Frequency</string>
 </resources>

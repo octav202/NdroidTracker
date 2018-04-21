@@ -1,11 +1,11 @@
-package com.ndroid.ndroidtracker;
+package com.ndroid.ndroidtracker.server;
 
 
 import android.os.AsyncTask;
 
-import java.util.List;
+import com.ndroid.ndroidtracker.models.DeviceLocation;
 
-public class SendLocationTask extends AsyncTask<Location, Void, Boolean> {
+public class SendLocationTask extends AsyncTask<DeviceLocation, Void, Boolean> {
 
     private SendLocationCallback mCallback;
 
@@ -14,7 +14,7 @@ public class SendLocationTask extends AsyncTask<Location, Void, Boolean> {
     }
 
     @Override
-    protected Boolean doInBackground(Location... location) {
+    protected Boolean doInBackground(DeviceLocation... deviceLocation) {
 
         try {
             Thread.sleep(1000);
@@ -23,7 +23,7 @@ public class SendLocationTask extends AsyncTask<Location, Void, Boolean> {
         }
 
         // Authenticate
-        return Service.sendLocation(location[0]);
+        return ServerApi.sendLocation(deviceLocation[0]);
     }
 
     @Override

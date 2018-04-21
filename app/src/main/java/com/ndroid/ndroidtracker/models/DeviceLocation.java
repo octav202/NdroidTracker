@@ -1,20 +1,20 @@
-package com.ndroid.ndroidtracker;
+package com.ndroid.ndroidtracker.models;
 
-public class Location {
+public class DeviceLocation {
 
     private int deviceId;
     private double lat;
     private double lon;
     private String timeStamp;
 
-    public Location() {
+    public DeviceLocation() {
         this.deviceId = 0;
         this.lat = 0;
         this.lon = 0;
         this.timeStamp = "";
     }
 
-    public Location(int deviceId, double lat, double lon, String timeStamp) {
+    public DeviceLocation(int deviceId, double lat, double lon, String timeStamp) {
         this.deviceId = deviceId;
         this.lat = lat;
         this.lon = lon;
@@ -46,7 +46,7 @@ public class Location {
     }
     @Override
     public String toString() {
-        return "Location [deviceId=" + deviceId + ", lat=" + lat + ", lon=" + lon + ", timeStamp=" + timeStamp + "]";
+        return "DeviceLocation [deviceId=" + deviceId + ", lat=" + lat + ", lon=" + lon + ", timeStamp=" + timeStamp + "]";
     }
 
 }

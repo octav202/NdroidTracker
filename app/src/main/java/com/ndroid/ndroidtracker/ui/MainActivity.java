@@ -1,4 +1,4 @@
-package com.ndroid.ndroidtracker;
+package com.ndroid.ndroidtracker.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.google.android.gms.maps.GoogleMap;
+import com.ndroid.ndroidtracker.AntiTheftService;
+import com.ndroid.ndroidtracker.R;
+import com.ndroid.ndroidtracker.server.ServerApi;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,18 +28,21 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(mPagerAdapter);
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        startService(new Intent(this, AntiTheftService.class));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        stopService(new Intent(this,AntiTheftService.class));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Service.setCurrentDeviceId(0);
-        Service.setCurrentDeviceStatus(null);
+        ServerApi.setCurrentDeviceId(0);
+        ServerApi.setCurrentDeviceStatus(null);
     }
 
     @Override
@@ -51,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sign_out:
-                Service.setCurrentDeviceStatus(null);
-                Service.setCurrentDeviceId(0);
+                ServerApi.setCurrentDeviceStatus(null);
+                ServerApi.setCurrentDeviceId(0);
                 Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

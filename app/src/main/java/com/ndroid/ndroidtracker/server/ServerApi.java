@@ -1,6 +1,10 @@
-package com.ndroid.ndroidtracker;
+package com.ndroid.ndroidtracker.server;
 
 import android.util.Log;
+
+import com.ndroid.ndroidtracker.models.Device;
+import com.ndroid.ndroidtracker.models.DeviceLocation;
+import com.ndroid.ndroidtracker.models.DeviceStatus;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +32,7 @@ import static com.ndroid.ndroidtracker.Constants.SEND_LOCATION;
 import static com.ndroid.ndroidtracker.Constants.SERVER_URL;
 import static com.ndroid.ndroidtracker.Constants.TAG;
 
-public class Service {
+public class ServerApi {
 
     private static int currentId = 0;
     private static Device sDevice;
@@ -175,7 +179,7 @@ public class Service {
      * @param deviceId
      * @return list of locations of the current device.
      */
-    public static List<Location> getLocation(int deviceId) {
+    public static List<DeviceLocation> getLocation(int deviceId) {
         URL url = getLocationUrl(deviceId);
         Log.d(TAG, "getLocationUrl() :" + url);
 
@@ -215,20 +219,20 @@ public class Service {
         }
 
         //Extract location list from Json
-        List<Location> locations = new ArrayList<Location>();
+        List<DeviceLocation> deviceLocations = new ArrayList<DeviceLocation>();
         if (result != null && !result.isEmpty()) {
             Log.d(TAG, "String Result : " + result);
             try {
                 JSONArray array = new JSONArray(result);
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject jsonObj = array.getJSONObject(i);
-                    Location location = new Location();
-                    location.setDeviceId(currentId);
-                    location.setLat(jsonObj.getDouble("lat"));
-                    location.setLon(jsonObj.getDouble("lon"));
-                    location.setTimeStamp(jsonObj.getString("timeStamp"));
-                    locations.add(location);
-                    Log.d(TAG,location.toString());
+                    DeviceLocation deviceLocation = new DeviceLocation();
+                    deviceLocation.setDeviceId(currentId);
+                    deviceLocation.setLat(jsonObj.getDouble("lat"));
+                    deviceLocation.setLon(jsonObj.getDouble("lon"));
+                    deviceLocation.setTimeStamp(jsonObj.getString("timeStamp"));
+                    deviceLocations.add(deviceLocation);
+                    Log.d(TAG, deviceLocation.toString());
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -236,15 +240,15 @@ public class Service {
         } else {
             Log.e(TAG, "Invalid Result");
         }
-        return locations;
+        return deviceLocations;
     }
 
     /**
-     * Send device's current location.
+     * Send device's current deviceLocation.
      *
      * @return success/fail.
      */
-    public static boolean sendLocation(Location location) {
+    public static boolean sendLocation(DeviceLocation deviceLocation) {
         URL url = null;
         try {
             url = new URL(SERVER_URL + SEND_LOCATION);
@@ -268,10 +272,10 @@ public class Service {
         // Create Json Object
         JSONObject json = new JSONObject();
         try {
-            json.put("deviceId", location.getDeviceId());
-            json.put("lat", location.getLat());
-            json.put("lon", location.getLon());
-            json.put("timeStamp", location.getTimeStamp());
+            json.put("deviceId", deviceLocation.getDeviceId());
+            json.put("lat", deviceLocation.getLat());
+            json.put("lon", deviceLocation.getLon());
+            json.put("timeStamp", deviceLocation.getTimeStamp());
         } catch (JSONException e) {
             Log.e(TAG, "Error creating Json object" + e);
         }
@@ -303,7 +307,7 @@ public class Service {
             return false;
         }
 
-        Log.d(TAG, "Location sent : " + location);
+        Log.d(TAG, "DeviceLocation sent : " + deviceLocation);
         return true;
     }
 
@@ -387,6 +391,7 @@ public class Service {
                 deviceStatus.setEncryptStorage(jsonObj.getInt("encryptStorage"));
                 deviceStatus.setReboot(jsonObj.getInt("reboot"));
                 deviceStatus.setTriggered(jsonObj.getInt("triggered"));
+                deviceStatus.setLocationFrequency(jsonObj.getInt("locationFrequency"));
                 Log.d(TAG,deviceStatus.toString());
             } catch (JSONException e) {
                 Log.e(TAG, "Error Parsing Json");
@@ -432,6 +437,7 @@ public class Service {
             json.put("encryptStorage", deviceStatus.getEncryptStorage());
             json.put("reboot", deviceStatus.getReboot());
             json.put("triggered", deviceStatus.getTriggered());
+            json.put("locationFrequency", deviceStatus.getLocationFrequency());
         } catch (JSONException e) {
             Log.e(TAG, "Error creating Json object" + e);
         }
