@@ -104,7 +104,7 @@ public class ServerApi {
      */
     public static int getDeviceId(String name, String pass) {
         URL url = getDeviceIdUrl(name, pass);
-        Log.d(TAG, "getDeviceIdURL() :" + url);
+        Log.d(TAG, "____ [GET DEVICE ID] ____ :" + url);
 
         InputStream stream = null;
         HttpURLConnection connection = null;
@@ -181,7 +181,7 @@ public class ServerApi {
      */
     public static List<DeviceLocation> getLocation(int deviceId) {
         URL url = getLocationUrl(deviceId);
-        Log.d(TAG, "getLocationUrl() :" + url);
+        Log.d(TAG, "____ [GET LOCATION] ____" + url);
 
         InputStream stream = null;
         HttpURLConnection connection = null;
@@ -221,7 +221,6 @@ public class ServerApi {
         //Extract location list from Json
         List<DeviceLocation> deviceLocations = new ArrayList<DeviceLocation>();
         if (result != null && !result.isEmpty()) {
-            Log.d(TAG, "String Result : " + result);
             try {
                 JSONArray array = new JSONArray(result);
                 for (int i = 0; i < array.length(); i++) {
@@ -255,7 +254,7 @@ public class ServerApi {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "sendLocationUrl() :" + url);
+        Log.d(TAG, "____ [SEND LOCATION] ____" + url);
 
         HttpURLConnection connection = null;
         try {
@@ -342,7 +341,7 @@ public class ServerApi {
      */
     public static DeviceStatus getDeviceStatus(int deviceId) {
         URL url = getDeviceStatusUrl(deviceId);
-        Log.d(TAG, "getDeviceStatusUrl() :" + url);
+        Log.d(TAG, "____ [GET DEVICE STATUS] ____" + url);
 
         InputStream stream = null;
         HttpURLConnection connection = null;
@@ -382,7 +381,6 @@ public class ServerApi {
         DeviceStatus deviceStatus = null;
         if (result != null && !result.isEmpty()) {
             deviceStatus = new DeviceStatus();
-            Log.d(TAG, "String Result : " + result);
             try {
                 JSONObject jsonObj = new JSONObject(result);
                 deviceStatus.setDeviceId(jsonObj.getInt("deviceId"));
@@ -414,7 +412,7 @@ public class ServerApi {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "sendDeviceStatusUrl() :" + url);
+        Log.d(TAG, "____ [SEND DEVICE STATUS] ____" + url);
 
         HttpURLConnection connection = null;
         try {

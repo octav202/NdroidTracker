@@ -1,5 +1,6 @@
 package com.ndroid.ndroidtracker.ui;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ndroid.ndroidtracker.AntiTheftService;
 import com.ndroid.ndroidtracker.R;
 import com.ndroid.ndroidtracker.server.SendDeviceStatusTask;
 import com.ndroid.ndroidtracker.server.ServerApi;
@@ -96,14 +98,22 @@ public class RemoteControlFragment extends Fragment {
         mTrackLocationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mFrequencyLayout.setEnabled(isChecked);
-                mFrequencyLayout.setClickable(isChecked);
-                mFrequencyBar.setEnabled(isChecked);
-
                 if (deviceStatus != null) {
+                    mFrequencyLayout.setEnabled(isChecked);
+                    mFrequencyLayout.setClickable(isChecked);
+                    mFrequencyBar.setEnabled(isChecked);
+
                     deviceStatus.setLocationFrequency(isChecked ? mFrequencyBar.getProgress() : 0);
                     updateDeviceStatus();
+
+                    Intent intent = new Intent(getActivity().getApplicationContext(), AntiTheftService.class);
+                    if (isChecked) {
+                        getActivity().getApplicationContext().startService(intent);
+                    } else {
+                        getActivity().getApplicationContext().stopService(intent);
+                    }
                 }
+
             }
         });
 
@@ -141,8 +151,7 @@ public class RemoteControlFragment extends Fragment {
             @Override
             public void onFinished(Boolean result) {
                 if (!result) {
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            "Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
                 }
             }
         }).execute(ServerApi.getCurrentDeviceStatus());
