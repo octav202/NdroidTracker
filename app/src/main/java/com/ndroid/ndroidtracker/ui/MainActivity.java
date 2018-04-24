@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.ndroid.ndroidtracker.AntiTheftService;
 import com.ndroid.ndroidtracker.R;
 import com.ndroid.ndroidtracker.server.ServerApi;
 
@@ -28,14 +27,11 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(mPagerAdapter);
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        startService(new Intent(this, AntiTheftService.class));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        stopService(new Intent(this,AntiTheftService.class));
     }
 
     @Override

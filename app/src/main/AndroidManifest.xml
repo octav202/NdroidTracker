@@ -28,8 +28,6 @@
         <activity android:name=".ui.MainActivity">
         </activity>
 
-        <service android:name=".AntiTheftService" android:enabled="true"></service>
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA-6q_WwKV8aPFBoa4YrFgfMYePvMhoXgE" />

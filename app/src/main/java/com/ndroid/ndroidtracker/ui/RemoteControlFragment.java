@@ -13,7 +13,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ndroid.ndroidtracker.AntiTheftService;
 import com.ndroid.ndroidtracker.R;
 import com.ndroid.ndroidtracker.server.SendDeviceStatusTask;
 import com.ndroid.ndroidtracker.server.ServerApi;
@@ -60,6 +59,7 @@ public class RemoteControlFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (deviceStatus != null) {
                     deviceStatus.setLock(isChecked ? 1 : 0);
+                    deviceStatus.setTriggered(0);
                     updateDeviceStatus();
                 }
             }
@@ -70,6 +70,7 @@ public class RemoteControlFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (deviceStatus != null) {
                     deviceStatus.setEncryptStorage(isChecked ? 1 : 0);
+                    deviceStatus.setTriggered(0);
                     updateDeviceStatus();
                 }
             }
@@ -80,6 +81,7 @@ public class RemoteControlFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (deviceStatus != null) {
                     deviceStatus.setReboot(isChecked ? 1 : 0);
+                    deviceStatus.setTriggered(0);
                     updateDeviceStatus();
                 }
             }
@@ -90,6 +92,7 @@ public class RemoteControlFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (deviceStatus != null) {
                     deviceStatus.setWipeData(isChecked ? 1 : 0);
+                    deviceStatus.setTriggered(0);
                     updateDeviceStatus();
                 }
             }
@@ -104,14 +107,8 @@ public class RemoteControlFragment extends Fragment {
                     mFrequencyBar.setEnabled(isChecked);
 
                     deviceStatus.setLocationFrequency(isChecked ? mFrequencyBar.getProgress() : 0);
+                    deviceStatus.setTriggered(0);
                     updateDeviceStatus();
-
-                    Intent intent = new Intent(getActivity().getApplicationContext(), AntiTheftService.class);
-                    if (isChecked) {
-                        getActivity().getApplicationContext().startService(intent);
-                    } else {
-                        getActivity().getApplicationContext().stopService(intent);
-                    }
                 }
 
             }
@@ -123,6 +120,7 @@ public class RemoteControlFragment extends Fragment {
                 mFrequencyText.setText("Frequency : " + progress + " sec.");
                 if (deviceStatus != null) {
                     deviceStatus.setLocationFrequency(mFrequencyBar.getProgress());
+                    deviceStatus.setTriggered(0);
                     updateDeviceStatus();
                 }
             }

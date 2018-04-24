@@ -14,6 +14,7 @@ import com.ndroid.ndroidtracker.Constants;
 import com.ndroid.ndroidtracker.server.GetLocationTask;
 import com.ndroid.ndroidtracker.server.ServerApi;
 import com.ndroid.ndroidtracker.models.DeviceLocation;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -88,13 +89,14 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
     }
 
     private void setMarkersForLocations(List<DeviceLocation> deviceLocations) {
-
-        mMap.clear();
-        for (DeviceLocation deviceLocation : deviceLocations) {
-            LatLng coord = new LatLng(deviceLocation.getLat(), deviceLocation.getLon());
-            MarkerOptions marker = new MarkerOptions().position(coord).title(deviceLocation.getTimeStamp());
-            mMap.addMarker(marker);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(coord));
+        if (mMap != null) {
+            mMap.clear();
+            for (DeviceLocation deviceLocation : deviceLocations) {
+                LatLng coord = new LatLng(deviceLocation.getLat(), deviceLocation.getLon());
+                MarkerOptions marker = new MarkerOptions().position(coord).title(deviceLocation.getTimeStamp());
+                mMap.addMarker(marker);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(coord));
+            }
         }
     }
 }
