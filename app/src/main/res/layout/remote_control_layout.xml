@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:background="@color/background">
 
+    <!-- Locked -->
     <Switch android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/locked_switch"
@@ -16,6 +17,9 @@
         android:layout_height="1dp"
         android:background="@color/colorPrimaryDark"/>
 
+
+    <!-- Storage Encryption -->
+
     <Switch android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/storage_encryption_switch"
@@ -26,6 +30,8 @@
     <View android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorPrimaryDark"/>
+
+    <!-- Reboot -->
 
     <Switch
         android:layout_width="wrap_content"
@@ -40,6 +46,8 @@
         android:layout_height="1dp"
         android:background="@color/colorPrimaryDark"/>
 
+    <!-- Wipe Data -->
+
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,6 +60,22 @@
         android:layout_height="1dp"
         android:background="@color/colorPrimaryDark"/>
 
+    <!-- Ring -->
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ring"
+        android:text="@string/ring"
+        android:textSize="15sp"
+        android:layout_margin="20dp"/>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimaryDark"/>
+
+    <!-- Track Location -->
+
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -61,6 +85,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="20dp"/>
+
+    <!-- Location Frequency -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -79,12 +105,16 @@
 
         <SeekBar
             android:id="@+id/frequencyBar"
-            android:max="10"
+            android:max="100"
             android:progress="5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimaryDark"/>
 
 
 </LinearLayout>

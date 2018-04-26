@@ -3,10 +3,13 @@ package com.ndroid.ndroidtracker.ui;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -24,6 +27,7 @@ public class RemoteControlFragment extends Fragment {
     private Switch mEncryptionSwitch;
     private Switch mRebootSwitch;
     private Switch mWipeSwitch;
+    private Switch mRingSwitch;
     private Switch mTrackLocationSwitch;
     private LinearLayout mFrequencyLayout;
     private TextView mFrequencyText;
@@ -37,6 +41,7 @@ public class RemoteControlFragment extends Fragment {
         mEncryptionSwitch = (Switch) view.findViewById(R.id.storage_encryption_switch);
         mRebootSwitch = (Switch) view.findViewById(R.id.reboot);
         mWipeSwitch = (Switch) view.findViewById(R.id.wipe_data);
+        mRingSwitch = (Switch) view.findViewById(R.id.ring);
         mTrackLocationSwitch = (Switch) view.findViewById(R.id.track);
         mFrequencyLayout = (LinearLayout) view.findViewById(R.id.frequencyLayout);
         mFrequencyText = (TextView) view.findViewById(R.id.frequencyText);
@@ -49,6 +54,7 @@ public class RemoteControlFragment extends Fragment {
             mEncryptionSwitch.setChecked(deviceStatus.getEncryptStorage() == 1 ? true : false);
             mRebootSwitch.setChecked(deviceStatus.getReboot() == 1 ? true : false);
             mWipeSwitch.setChecked(deviceStatus.getWipeData() == 1 ? true : false);
+            mRingSwitch.setChecked(deviceStatus.getRing() == 1 ? true : false);
             mTrackLocationSwitch.setChecked(deviceStatus.getLocationFrequency() == 0 ? false : true);
             mFrequencyBar.setProgress(deviceStatus.getLocationFrequency());
             mFrequencyText.setText("Frequency: " + deviceStatus.getLocationFrequency() + " sec.");
@@ -98,6 +104,17 @@ public class RemoteControlFragment extends Fragment {
             }
         });
 
+        mRingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (deviceStatus != null) {
+                    deviceStatus.setRing(isChecked ? 1 : 0);
+                    deviceStatus.setTriggered(0);
+                    updateDeviceStatus();
+                }
+            }
+        });
+
         mTrackLocationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -135,7 +152,6 @@ public class RemoteControlFragment extends Fragment {
 
             }
         });
-
         return view;
     }
 

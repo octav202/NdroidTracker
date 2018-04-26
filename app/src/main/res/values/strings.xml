@@ -10,4 +10,6 @@
     <string name="sign_out">Sign Out</string>
     <string name="track_location">Track Location</string>
     <string name="frequency">Frequency</string>
+    <string name="ring">Ring</string>
+    <string name="ip_address">IP Address</string>
 </resources>
