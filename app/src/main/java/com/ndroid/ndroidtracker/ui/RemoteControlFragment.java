@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -32,6 +33,7 @@ public class RemoteControlFragment extends Fragment {
     private LinearLayout mFrequencyLayout;
     private TextView mFrequencyText;
     private SeekBar mFrequencyBar;
+    private Button mSignOutButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class RemoteControlFragment extends Fragment {
         mFrequencyLayout = (LinearLayout) view.findViewById(R.id.frequencyLayout);
         mFrequencyText = (TextView) view.findViewById(R.id.frequencyText);
         mFrequencyBar = (SeekBar) view.findViewById(R.id.frequencyBar);
+        mSignOutButton = (Button) view.findViewById(R.id.signOutBtn);
 
         final DeviceStatus deviceStatus = ServerApi.getCurrentDeviceStatus();
 
@@ -58,6 +61,10 @@ public class RemoteControlFragment extends Fragment {
             mTrackLocationSwitch.setChecked(deviceStatus.getLocationFrequency() == 0 ? false : true);
             mFrequencyBar.setProgress(deviceStatus.getLocationFrequency());
             mFrequencyText.setText("Frequency: " + deviceStatus.getLocationFrequency() + " sec.");
+
+            if (deviceStatus.getLocationFrequency() == 0) {
+                mFrequencyLayout.setEnabled(false);
+            }
         }
 
         mLockSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -134,6 +141,9 @@ public class RemoteControlFragment extends Fragment {
         mFrequencyBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                if (!mTrackLocationSwitch.isChecked()) return;
+
                 mFrequencyText.setText("Frequency : " + progress + " sec.");
                 if (deviceStatus != null) {
                     deviceStatus.setLocationFrequency(mFrequencyBar.getProgress());
@@ -150,6 +160,17 @@ public class RemoteControlFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
+
+        mSignOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ServerApi.setCurrentDeviceStatus(null);
+                ServerApi.setCurrentDeviceId(0);
+                Intent intent = new Intent(getActivity().getApplicationContext(), SignInActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
         return view;

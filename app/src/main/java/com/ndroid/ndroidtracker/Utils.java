@@ -67,4 +67,5 @@ public class Utils {
         String ip = preferences.getString(SHARED_KEY_IP_ADDRESS, "");
         return ip;
     }
+
 }

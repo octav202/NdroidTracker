@@ -1,7 +1,5 @@
 package com.ndroid.ndroidtracker.ui;
 
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,46 +15,12 @@ import com.ndroid.ndroidtracker.models.DeviceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class LocationFragment extends SupportMapFragment implements OnMapReadyCallback {
 
     private static final String TAG = Constants.TAG + LocationFragment.class.getSimpleName();
     private GoogleMap mMap;
     private List<DeviceLocation> mDeviceLocations = new ArrayList<>();
-    private AtomicInteger LOCATION_REFRESH_FREQUENCY = new AtomicInteger(5000);
-
-    // Location
-    private Handler mLocationHandler;
-    private HandlerThread mLocationHandlerThread = null;
-    private Runnable mLocationUpdateRunnable = new Runnable() {
-        @Override
-        public void run() {
-
-            new GetLocationTask(new GetLocationTask.GetLocationCallback() {
-                @Override
-                public void onStarted() {
-                }
-
-                @Override
-                public void onFinished(List<DeviceLocation> result) {
-                    mDeviceLocations.addAll(result);
-                    setMarkersForLocations(mDeviceLocations);
-                }
-            }).execute(ServerApi.getCurrentDeviceId());
-
-            mLocationHandler.postDelayed(this, LOCATION_REFRESH_FREQUENCY.get());
-
-        }
-    };
-
-    private void startLocationThread() {
-        Log.d(TAG, "startLocationThread()");
-        mLocationHandlerThread = new HandlerThread("Location_Thread");
-        mLocationHandlerThread.start();
-        mLocationHandler = new Handler(mLocationHandlerThread.getLooper());
-        mLocationHandler.postDelayed(mLocationUpdateRunnable, LOCATION_REFRESH_FREQUENCY.get());
-    }
 
     @Override
     public void onStart() {
@@ -76,7 +40,6 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady()");
         mMap = googleMap;
-        startLocationThread();
     }
 
     public void setMapType(int type) {
@@ -89,6 +52,7 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
     }
 
     private void setMarkersForLocations(List<DeviceLocation> deviceLocations) {
+        Log.d(TAG,"setMarkersForLocations");
         if (mMap != null) {
             mMap.clear();
             for (DeviceLocation deviceLocation : deviceLocations) {
@@ -98,5 +62,19 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(coord));
             }
         }
+    }
+
+    public void refresh() {
+        new GetLocationTask(new GetLocationTask.GetLocationCallback() {
+            @Override
+            public void onStarted() {
+            }
+
+            @Override
+            public void onFinished(List<DeviceLocation> result) {
+                mDeviceLocations.addAll(result);
+                setMarkersForLocations(mDeviceLocations);
+            }
+        }).execute(ServerApi.getCurrentDeviceId());
     }
 }
