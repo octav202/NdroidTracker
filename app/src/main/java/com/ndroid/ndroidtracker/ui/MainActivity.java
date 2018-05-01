@@ -1,11 +1,9 @@
 package com.ndroid.ndroidtracker.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,10 +53,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh:
-                LocationFragment fragment = (LocationFragment) mPagerAdapter.getItem(1);
-                if (fragment != null) {
-                    fragment.refresh();
-                }
+                mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
+                ViewPager viewPager = findViewById(R.id.viewpager);
+                viewPager.setAdapter(mPagerAdapter);
+                TabLayout tabLayout = findViewById(R.id.sliding_tabs);
+                tabLayout.setupWithViewPager(viewPager);
+                viewPager.setCurrentItem(1);
                 break;
             default:
                 break;

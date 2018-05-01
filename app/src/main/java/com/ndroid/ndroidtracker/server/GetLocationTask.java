@@ -17,13 +17,6 @@ public class GetLocationTask extends AsyncTask<Integer, Void, List<DeviceLocatio
 
     @Override
     protected List<DeviceLocation> doInBackground(Integer... deviceId) {
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         return ServerApi.getLocation(deviceId[0]);
     }
 

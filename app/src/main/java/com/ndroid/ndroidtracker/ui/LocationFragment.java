@@ -1,5 +1,7 @@
 package com.ndroid.ndroidtracker.ui;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -9,9 +11,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ndroid.ndroidtracker.Constants;
+import com.ndroid.ndroidtracker.models.DeviceLocation;
 import com.ndroid.ndroidtracker.server.GetLocationTask;
 import com.ndroid.ndroidtracker.server.ServerApi;
-import com.ndroid.ndroidtracker.models.DeviceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,18 +42,10 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady()");
         mMap = googleMap;
+        refresh();
     }
 
-    public void setMapType(int type) {
-        Log.d(TAG, "setMapType() " + type);
-        if (mMap != null) {
-            mMap.setMapType(type);
-        } else {
-            Log.e(TAG, "Null Map Object");
-        }
-    }
-
-    private void setMarkersForLocations(List<DeviceLocation> deviceLocations) {
+    private void setMarkersForLocations(final List<DeviceLocation> deviceLocations) {
         Log.d(TAG,"setMarkersForLocations");
         if (mMap != null) {
             mMap.clear();
@@ -59,12 +53,14 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
                 LatLng coord = new LatLng(deviceLocation.getLat(), deviceLocation.getLon());
                 MarkerOptions marker = new MarkerOptions().position(coord).title(deviceLocation.getTimeStamp());
                 mMap.addMarker(marker);
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(coord));
+                //mMap.moveCamera(CameraUpdateFactory.newLatLng(coord));
             }
+        } else {
+            Log.e(TAG, "Map is null");
         }
     }
 
-    public void refresh() {
+    private void refresh() {
         new GetLocationTask(new GetLocationTask.GetLocationCallback() {
             @Override
             public void onStarted() {
@@ -72,6 +68,7 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
 
             @Override
             public void onFinished(List<DeviceLocation> result) {
+                Log.d(TAG, "GetLocationTask onFinished");
                 mDeviceLocations.addAll(result);
                 setMarkersForLocations(mDeviceLocations);
             }
