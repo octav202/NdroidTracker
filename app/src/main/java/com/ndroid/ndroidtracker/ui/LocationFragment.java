@@ -42,7 +42,7 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
     }
 
     private void setMarkersForLocations(final List<DeviceLocation> deviceLocations) {
-        Log.d(TAG,"setMarkersForLocations" + deviceLocations.size());
+        Log.d(TAG,"setMarkersForLocations " + deviceLocations.size());
         if (mMap != null) {
             mMap.clear();
             for (DeviceLocation deviceLocation : deviceLocations) {
@@ -65,6 +65,7 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
             @Override
             public void onFinished(List<DeviceLocation> result) {
                 Log.d(TAG, "onFinished() " + result.size());
+                mDeviceLocations.clear();
                 mDeviceLocations.addAll(result);
                 setMarkersForLocations(mDeviceLocations);
             }
