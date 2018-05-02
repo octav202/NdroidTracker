@@ -200,10 +200,20 @@ public class ServerApi {
             }
             stream = connection.getInputStream();
             if (stream != null) {
-                result = readStream(stream, 500);
+                //result = readStream(stream, 10000);
+
+                // Convert input stream to String
+                StringBuilder builder = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+                String line;
+                while((line = reader.readLine()) != null){
+                    builder.append(line);
+                    result = builder.toString();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         } finally {
             if (stream != null) {
                 try {
@@ -231,13 +241,13 @@ public class ServerApi {
                     deviceLocation.setLon(jsonObj.getDouble("lon"));
                     deviceLocation.setTimeStamp(jsonObj.getString("timeStamp"));
                     deviceLocations.add(deviceLocation);
-                    Log.d(TAG, deviceLocation.toString());
+                    //Log.d(TAG, deviceLocation.toString());
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.d(TAG, e.getLocalizedMessage());
             }
         } else {
-            Log.e(TAG, "Invalid Result");
+            Log.e(TAG, "Invalid or Empty Result");
         }
         return deviceLocations;
     }

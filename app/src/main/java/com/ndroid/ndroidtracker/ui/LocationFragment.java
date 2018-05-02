@@ -1,10 +1,6 @@
 package com.ndroid.ndroidtracker.ui;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -46,7 +42,7 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
     }
 
     private void setMarkersForLocations(final List<DeviceLocation> deviceLocations) {
-        Log.d(TAG,"setMarkersForLocations");
+        Log.d(TAG,"setMarkersForLocations" + deviceLocations.size());
         if (mMap != null) {
             mMap.clear();
             for (DeviceLocation deviceLocation : deviceLocations) {
@@ -68,7 +64,7 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
 
             @Override
             public void onFinished(List<DeviceLocation> result) {
-                Log.d(TAG, "GetLocationTask onFinished");
+                Log.d(TAG, "onFinished() " + result.size());
                 mDeviceLocations.addAll(result);
                 setMarkersForLocations(mDeviceLocations);
             }
