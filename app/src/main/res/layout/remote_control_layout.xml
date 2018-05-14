@@ -17,22 +17,7 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"/>
 
-
-    <!-- Storage Encryption -->
-
-    <Switch android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/storage_encryption_switch"
-        android:layout_margin="12dp"
-        android:text="@string/storage_encryption"
-        android:textSize="15sp"/>
-
-    <View android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
-
     <!-- Reboot -->
-
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,22 +31,7 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"/>
 
-    <!-- Wipe Data -->
-
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/wipe_data"
-        android:text="@string/wipe_data"
-        android:textSize="15sp"
-        android:layout_margin="12dp"/>
-
-    <View android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
-
     <!-- Ring -->
-
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -74,8 +44,20 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"/>
 
-    <!-- Track Location -->
+    <!-- Freeze -->
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/freeze"
+        android:text="@string/freeze"
+        android:textSize="15sp"
+        android:layout_margin="12dp"/>
 
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <!-- Track Location -->
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -125,5 +107,23 @@
         android:textColor="@android:color/white"
         />
 
+    <!-- Storage Encryption DISABLED -->
+    <Switch
+        android:id="@+id/storage_encryption_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:text="@string/storage_encryption"
+        android:textSize="15sp"
+        android:visibility="gone" />
+    <!-- Wipe Data DISABLED -->
+    <Switch
+        android:id="@+id/wipe_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:text="@string/wipe_data"
+        android:textSize="15sp"
+        android:visibility="gone" />
 
 </LinearLayout>

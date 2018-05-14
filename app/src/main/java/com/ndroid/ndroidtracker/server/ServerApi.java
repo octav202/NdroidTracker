@@ -332,6 +332,7 @@ public class ServerApi {
                 deviceStatus.setReboot(jsonObj.getInt("reboot"));
                 deviceStatus.setTriggered(jsonObj.getInt("triggered"));
                 deviceStatus.setRing(jsonObj.getInt("ring"));
+                deviceStatus.setFreeze(jsonObj.getInt("freeze"));
                 deviceStatus.setLocationFrequency(jsonObj.getInt("locationFrequency"));
                 Log.d(TAG,deviceStatus.toString());
             } catch (JSONException e) {
@@ -379,6 +380,7 @@ public class ServerApi {
             json.put("reboot", deviceStatus.getReboot());
             json.put("triggered", deviceStatus.getTriggered());
             json.put("ring", deviceStatus.getRing());
+            json.put("freeze", deviceStatus.getFreeze());
             json.put("locationFrequency", deviceStatus.getLocationFrequency());
         } catch (JSONException e) {
             Log.e(TAG, "Error creating Json object" + e);
