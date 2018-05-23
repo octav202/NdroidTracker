@@ -10,6 +10,7 @@ public class DeviceStatus {
     private Integer locationFrequency;
     private Integer ring;
     private Integer freeze;
+    private Integer alert;
     private Integer triggered;
 
     public DeviceStatus() {
@@ -21,11 +22,12 @@ public class DeviceStatus {
         this.triggered = 0;
         this.ring = 0;
         this.freeze = 0;
+        this.alert = 0;
         this.locationFrequency = 0;
     }
 
     public DeviceStatus(int deviceId, Integer lock, Integer wipeData, Integer encryptStorage,
-                        Integer reboot, Integer frequency, Integer ring, Integer freeze, Integer triggered) {
+                        Integer reboot, Integer frequency, Integer ring, Integer freeze, Integer alert, Integer triggered) {
         this.deviceId = deviceId;
         this.lock = lock;
         this.wipeData = wipeData;
@@ -33,7 +35,8 @@ public class DeviceStatus {
         this.reboot = reboot;
         this.locationFrequency = frequency;
         this.ring = ring;
-        this.freeze = 0;
+        this.freeze = freeze;
+        this.alert = alert;
         this.triggered = triggered;
     }
 
@@ -91,6 +94,13 @@ public class DeviceStatus {
     public void setFreeze(Integer freeze) {
         this.freeze = freeze;
     }
+    public Integer getAlert() {
+        return alert;
+    }
+    public void setAlert(Integer alert) {
+        this.alert = alert;
+    }
+
     @Override
     public String toString() {
         return "DeviceStatus{" +
@@ -102,6 +112,7 @@ public class DeviceStatus {
                 ", locationFrequency=" + locationFrequency +
                 ", ring=" + ring +
                 ", freeze=" + freeze +
+                ", alert=" + alert +
                 ", triggered=" + triggered +
                 '}';
     }

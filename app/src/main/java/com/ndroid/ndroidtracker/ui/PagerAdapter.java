@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class PagerAdapter extends FragmentPagerAdapter {
 
-    private String tabTitles[] = new String[]{"Remote Control", "Tracker"};
+    private String tabTitles[] = new String[]{"Remote Control", "Alert" , "Tracker"};
 
     public PagerAdapter(FragmentManager fm) {
         super(fm);
@@ -20,6 +20,8 @@ public class PagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new RemoteControlFragment();
             case 1:
+                return new AlertFragment();
+            case 2:
                 return new LocationFragment();
             default:
                 return null;

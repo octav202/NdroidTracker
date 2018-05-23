@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 viewPager.setAdapter(mPagerAdapter);
                 TabLayout tabLayout = findViewById(R.id.sliding_tabs);
                 tabLayout.setupWithViewPager(viewPager);
-                viewPager.setCurrentItem(1);
+                viewPager.setCurrentItem(2);
                 break;
             default:
                 break;

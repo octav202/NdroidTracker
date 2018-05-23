@@ -14,4 +14,10 @@
     <string name="freeze">Freeze</string>
     <string name="ip_address">IP Address</string>
     <string name="refresh">Refresh</string>
+    <string name="enabled">Enabled</string>
+    <string name="hint_phone">Phone</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_description">Description</string>
+    <string name="send">Send</string>
+
 </resources>

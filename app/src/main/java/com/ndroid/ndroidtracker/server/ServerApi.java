@@ -3,6 +3,7 @@ package com.ndroid.ndroidtracker.server;
 import android.util.Log;
 
 import com.ndroid.ndroidtracker.models.Device;
+import com.ndroid.ndroidtracker.models.DeviceAlert;
 import com.ndroid.ndroidtracker.models.DeviceLocation;
 import com.ndroid.ndroidtracker.models.DeviceStatus;
 
@@ -24,9 +25,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ndroid.ndroidtracker.Constants.GET_DEVICE_ALERT;
 import static com.ndroid.ndroidtracker.Constants.GET_DEVICE_ID;
 import static com.ndroid.ndroidtracker.Constants.GET_DEVICE_STATUS;
 import static com.ndroid.ndroidtracker.Constants.GET_LOCATION;
+import static com.ndroid.ndroidtracker.Constants.SEND_DEVICE_ALERT;
 import static com.ndroid.ndroidtracker.Constants.SEND_DEVICE_STATUS;
 import static com.ndroid.ndroidtracker.Constants.SEND_LOCATION;
 import static com.ndroid.ndroidtracker.Constants.SERVER_URL;
@@ -37,6 +40,7 @@ public class ServerApi {
     private static int currentId = 0;
     private static Device sDevice;
     private static DeviceStatus sDeviceStatus;
+    private static DeviceAlert sDeviceAlert;
 
     public static int getCurrentDeviceId() {
         return currentId;
@@ -50,6 +54,14 @@ public class ServerApi {
     }
     public static void setCurrentDeviceStatus(DeviceStatus status) {
         sDeviceStatus = status;
+    }
+
+    public static DeviceAlert getCurrentDeviceAlert() {
+        return sDeviceAlert;
+    }
+
+    public static void setCurrentDeviceAlert(DeviceAlert sDeviceAlert) {
+        ServerApi.sDeviceAlert = sDeviceAlert;
     }
 
     /**
@@ -276,10 +288,10 @@ public class ServerApi {
     }
 
     /**
-     * Get location for a device
+     * Get status for a device.
      *
      * @param deviceId
-     * @return list of locations of the current device.
+     * @return Device Status.
      */
     public static DeviceStatus getDeviceStatus(int deviceId) {
         URL url = getDeviceStatusUrl(deviceId);
@@ -333,6 +345,7 @@ public class ServerApi {
                 deviceStatus.setTriggered(jsonObj.getInt("triggered"));
                 deviceStatus.setRing(jsonObj.getInt("ring"));
                 deviceStatus.setFreeze(jsonObj.getInt("freeze"));
+                deviceStatus.setAlert(jsonObj.getInt("alert"));
                 deviceStatus.setLocationFrequency(jsonObj.getInt("locationFrequency"));
                 Log.d(TAG,deviceStatus.toString());
             } catch (JSONException e) {
@@ -345,7 +358,7 @@ public class ServerApi {
     }
 
     /**
-     * Send device's current location.
+     * Send device's current status.
      *
      * @return success/fail.
      */
@@ -381,6 +394,7 @@ public class ServerApi {
             json.put("triggered", deviceStatus.getTriggered());
             json.put("ring", deviceStatus.getRing());
             json.put("freeze", deviceStatus.getFreeze());
+            json.put("alert", deviceStatus.getAlert());
             json.put("locationFrequency", deviceStatus.getLocationFrequency());
         } catch (JSONException e) {
             Log.e(TAG, "Error creating Json object" + e);
@@ -416,4 +430,160 @@ public class ServerApi {
         Log.d(TAG, "DeviceStatus sent : " + deviceStatus);
         return true;
     }
+
+    /////////////////////////////////////////////////////////////
+    // _____________________ DEVICE ALERT ___________________ //
+    ////////////////////////////////////////////////////////////
+
+    /**
+     * Create the URL for getDeviceStatus request
+     *
+     * @param id
+     * @return the URL.
+     */
+    public static URL getDeviceAlertUrl(int id) {
+        String template = SERVER_URL + GET_DEVICE_ALERT + "?id=%s";
+        String stringUrl = String.format(template, id);
+        URL url = null;
+        try {
+            url = new URL(stringUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    /**
+     * Get location for a device
+     *
+     * @param deviceId
+     * @return list of locations of the current device.
+     */
+    public static DeviceAlert getDeviceAlert(int deviceId) {
+        URL url = getDeviceAlertUrl(deviceId);
+        Log.d(TAG, "____ [GET DEVICE ALERT] ____" + url);
+
+        InputStream stream = null;
+        HttpURLConnection connection = null;
+        String result = null;
+        try {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setReadTimeout(3000);
+            connection.setConnectTimeout(3000);
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.connect();
+            int response = connection.getResponseCode();
+            if (response != HttpURLConnection.HTTP_OK) {
+                Log.e(TAG, "Request Failed :" + response);
+                return null;
+            }
+            stream = connection.getInputStream();
+            if (stream != null) {
+                result = readStream(stream, 500);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+
+        DeviceAlert deviceAlert = null;
+        if (result != null && !result.isEmpty()) {
+            deviceAlert = new DeviceAlert();
+            try {
+                JSONObject jsonObj = new JSONObject(result);
+                deviceAlert.setDeviceId(jsonObj.getInt("deviceId"));
+                deviceAlert.setPhone(jsonObj.getString("phone"));
+                deviceAlert.setEmail(jsonObj.getString("email"));
+                deviceAlert.setDescription(jsonObj.getString("description"));
+                Log.d(TAG,deviceAlert.toString());
+            } catch (JSONException e) {
+                Log.e(TAG, "Error Parsing Json");
+            }
+        } else {
+            Log.e(TAG, "Invalid Result");
+        }
+        return deviceAlert;
+    }
+
+    /**
+     * Send device alert
+     *
+     * @return success/fail.
+     */
+    public static boolean sendDeviceAlert(DeviceAlert deviceAlert) {
+        URL url = null;
+        try {
+            url = new URL(SERVER_URL + SEND_DEVICE_ALERT);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "____ [SEND DEVICE ALERT] ____" + url);
+
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
+            Log.e(TAG, "Open Connection error " + e);
+            return false;
+        }
+        connection.setDoOutput (true);
+        connection.setUseCaches (false);
+        connection.setChunkedStreamingMode(0);
+        connection.setRequestProperty("Content-Type","application/json");
+
+        // Create Json Object
+        JSONObject json = new JSONObject();
+        try {
+            json.put("deviceId", deviceAlert.getDeviceId());
+            json.put("phone", deviceAlert.getPhone());
+            json.put("email", deviceAlert.getEmail());
+            json.put("description", deviceAlert.getDescription());
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating Json object" + e);
+        }
+
+        // Send request body
+        OutputStream os = null;
+        try {
+            os = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            writer.write(json.toString());
+            writer.flush();
+            writer.close();
+            os.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Error writing request body" + e);
+            return false;
+        }
+
+        // Connect
+        try {
+            connection.connect();
+            int response = connection.getResponseCode();
+            if (response != HttpURLConnection.HTTP_OK) {
+                Log.e(TAG, "Connection Failed :" + response);
+                return false;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Connect error " + e);
+            return false;
+        }
+
+        Log.d(TAG, "DeviceAlert sent : " + deviceAlert);
+        return true;
+    }
+
 }

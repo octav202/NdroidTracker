@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.ndroid.ndroidtracker.Constants;
 import com.ndroid.ndroidtracker.Utils;
+import com.ndroid.ndroidtracker.models.DeviceAlert;
+import com.ndroid.ndroidtracker.server.GetDeviceAlertTask;
 import com.ndroid.ndroidtracker.server.GetDeviceStatusTask;
 import com.ndroid.ndroidtracker.R;
 import com.ndroid.ndroidtracker.server.ServerApi;
@@ -106,12 +108,18 @@ public class SignInActivity extends AppCompatActivity {
                                 @Override
                                 public void onFinished(DeviceStatus status) {
                                     ServerApi.setCurrentDeviceStatus(status);
+
+                                    // Get Device Alert
+                                    getDeviceAlert(status.getDeviceId());
+
                                     // Go to Main Activity
                                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                                     startActivity(i);
 
                                 }
                             }).execute(id);
+
+
 
                         } else {
                             Toast.makeText(getApplicationContext(), "Invalid Credentials",
@@ -121,5 +129,18 @@ public class SignInActivity extends AppCompatActivity {
                 }).execute(name, pass);
             }
         });
+    }
+
+    private void getDeviceAlert(int id) {
+        new GetDeviceAlertTask(new GetDeviceAlertTask.GetDeviceAlertCallback() {
+            @Override
+            public void onStarted() {
+            }
+
+            @Override
+            public void onFinished(DeviceAlert alert) {
+                ServerApi.setCurrentDeviceAlert(alert);
+            }
+        }).execute(id);
     }
 }
