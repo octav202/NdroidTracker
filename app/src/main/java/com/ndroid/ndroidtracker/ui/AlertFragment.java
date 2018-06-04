@@ -65,8 +65,6 @@ public class AlertFragment extends Fragment {
                     deviceStatus.setAlert(isChecked ? 1 : 0);
 
                     enableControls(isChecked);
-
-                    updateDeviceStatus();
                 }
             }
         });
@@ -117,8 +115,10 @@ public class AlertFragment extends Fragment {
 
             @Override
             public void onFinished(Boolean result) {
+                updateDeviceStatus();
             }
         }).execute(ServerApi.getCurrentDeviceAlert());
+
     }
 
     private void enableControls(boolean status) {
@@ -126,12 +126,10 @@ public class AlertFragment extends Fragment {
             mPhoneText.setEnabled(true);
             mEmailText.setEnabled(true);
             mDescriptionText.setEnabled(true);
-            mSendButton.setEnabled(true);
         } else {
             mPhoneText.setEnabled(false);
             mEmailText.setEnabled(false);
             mDescriptionText.setEnabled(false);
-            mSendButton.setEnabled(false);
         }
     }
 }

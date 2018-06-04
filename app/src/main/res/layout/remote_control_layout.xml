@@ -76,7 +76,8 @@
         android:id="@+id/frequencyLayout"
         android:orientation="vertical"
         android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp">
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp">
 
         <TextView
             android:id="@+id/frequencyText"
@@ -93,6 +94,10 @@
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
     <Button android:layout_width="match_parent"
         android:layout_height="wrap_content"
