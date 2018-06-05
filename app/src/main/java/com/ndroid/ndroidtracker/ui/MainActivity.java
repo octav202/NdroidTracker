@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.ndroid.ndroidtracker.Constants;
 import com.ndroid.ndroidtracker.R;
 import com.ndroid.ndroidtracker.server.ServerApi;
+import com.ndroid.ndroidtracker.server.SimulateLocationTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,9 +61,25 @@ public class MainActivity extends AppCompatActivity {
                 tabLayout.setupWithViewPager(viewPager);
                 viewPager.setCurrentItem(2);
                 break;
+
+            case R.id.simulate:
+                simulateLocation();
+                break;
             default:
                 break;
         }
         return true;
+    }
+
+    private void simulateLocation() {
+        new SimulateLocationTask(new SimulateLocationTask.SimulateLocationCallback() {
+            @Override
+            public void onStarted() {
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        }).execute(ServerApi.getCurrentDeviceStatus().getDeviceId());
     }
 }

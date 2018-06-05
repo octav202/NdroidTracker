@@ -33,6 +33,7 @@ import static com.ndroid.ndroidtracker.Constants.SEND_DEVICE_ALERT;
 import static com.ndroid.ndroidtracker.Constants.SEND_DEVICE_STATUS;
 import static com.ndroid.ndroidtracker.Constants.SEND_LOCATION;
 import static com.ndroid.ndroidtracker.Constants.SERVER_URL;
+import static com.ndroid.ndroidtracker.Constants.SIMULATE_LOCATION;
 import static com.ndroid.ndroidtracker.Constants.TAG;
 
 public class ServerApi {
@@ -584,6 +585,72 @@ public class ServerApi {
 
         Log.d(TAG, "DeviceAlert sent : " + deviceAlert);
         return true;
+    }
+
+    /////////////////////////////////////////////////////////////////
+    // _____________________ SIMULATE LOCATION ___________________ //
+    ////////////////////////////////////////////////////////////////
+
+    /**
+     * Create the URL for simulateLocation request
+     *
+     * @param id
+     * @return the URL.
+     */
+    public static URL getSimulateLocataionUrl(int id) {
+        String template = SERVER_URL + SIMULATE_LOCATION + "?id=%s";
+        String stringUrl = String.format(template, id);
+        URL url = null;
+        try {
+            url = new URL(stringUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    /**
+     * Simulate location change for a device
+     *
+     * @param deviceId id of the device
+     * @return void
+     */
+    public static void simulateLocation(int deviceId) {
+        URL url = getSimulateLocataionUrl(deviceId);
+        Log.d(TAG, "____ [SIMULATE LOCATION] ____" + url);
+
+        InputStream stream = null;
+        HttpURLConnection connection = null;
+        String result = null;
+        try {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setReadTimeout(3000);
+            connection.setConnectTimeout(3000);
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.connect();
+            int response = connection.getResponseCode();
+            if (response != HttpURLConnection.HTTP_OK) {
+                Log.e(TAG, "Request Failed :" + response);
+                return;
+            }
+            stream = connection.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
     }
 
 }
