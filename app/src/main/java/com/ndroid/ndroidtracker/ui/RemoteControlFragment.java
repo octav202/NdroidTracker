@@ -62,7 +62,7 @@ public class RemoteControlFragment extends Fragment {
             mFreezeSwitch.setChecked(deviceStatus.getFreeze() == 1 ? true : false);
             mTrackLocationSwitch.setChecked(deviceStatus.getLocationFrequency() == 0 ? false : true);
             mFrequencyBar.setProgress(deviceStatus.getLocationFrequency());
-            mFrequencyText.setText("Frequency: " + deviceStatus.getLocationFrequency() + " sec.");
+            mFrequencyText.setText("Frequency - " + deviceStatus.getLocationFrequency() + " sec.");
 
             if (deviceStatus.getLocationFrequency() == 0) {
                 mFrequencyLayout.setEnabled(false);
