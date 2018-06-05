@@ -1,6 +1,8 @@
 package com.ndroid.ndroidtracker.ui;
 
 import android.util.Log;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -49,10 +51,21 @@ public class LocationFragment extends SupportMapFragment implements OnMapReadyCa
                 LatLng coord = new LatLng(deviceLocation.getLat(), deviceLocation.getLon());
                 MarkerOptions marker = new MarkerOptions().position(coord).title(deviceLocation.getTimeStamp());
                 mMap.addMarker(marker);
-                //mMap.moveCamera(CameraUpdateFactory.newLatLng(coord));
+                moveToCurrentLocation(coord);
             }
         } else {
             Log.e(TAG, "Map is null");
+        }
+    }
+
+    // Move and zoom to marker.
+    private void moveToCurrentLocation(LatLng currentLocation) {
+        if (mMap != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            // Zoom in, animating the camera.
+            mMap.animateCamera(CameraUpdateFactory.zoomIn());
+            // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
         }
     }
 
