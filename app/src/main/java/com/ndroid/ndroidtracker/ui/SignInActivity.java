@@ -1,8 +1,11 @@
 package com.ndroid.ndroidtracker.ui;
 
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -57,7 +60,7 @@ public class SignInActivity extends AppCompatActivity {
             mIpText.setText(ip);
             SERVER_IP = ip;
             SERVER_URL = SERVER_URL_PREFIX + SERVER_IP + SERVER_URL_SUFFIX;
-        }
+        } 
 
         mIpText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -78,9 +81,30 @@ public class SignInActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = mNameText.getText().toString();
                 String pass = mPassText.getText().toString();
+                String ip = mIpText.getText().toString();
 
+
+                // Check credentials
                 if (name.isEmpty() || pass.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Invalid Credentials",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Check Ip
+                if (ip.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Invalid Ip Address",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                SERVER_IP = ip;
+                SERVER_URL = SERVER_URL_PREFIX + SERVER_IP + SERVER_URL_SUFFIX;
+                Utils.storeIpAddress(getApplicationContext(), SERVER_IP);
+
+                // Check Wifi state
+                if (!ServerApi.isWifiOn(getApplicationContext())) {
+                    Toast.makeText(getApplicationContext(), "Please turn Wifi On..",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }

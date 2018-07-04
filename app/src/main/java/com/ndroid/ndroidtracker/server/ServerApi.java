@@ -1,5 +1,8 @@
 package com.ndroid.ndroidtracker.server;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.ndroid.ndroidtracker.models.Device;
@@ -63,6 +66,12 @@ public class ServerApi {
 
     public static void setCurrentDeviceAlert(DeviceAlert sDeviceAlert) {
         ServerApi.sDeviceAlert = sDeviceAlert;
+    }
+
+    public static boolean isWifiOn(Context context){
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+       return mWifi.isConnected();
     }
 
     /**
